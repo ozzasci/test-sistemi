@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basit Test Sistemi</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .question { margin-bottom: 20px; }
+        button { padding: 10px 15px; background: #4CAF50; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Test Sistemi</h1>
+    <div id="quiz"></div>
+    <button id="submit">Testi Gönder</button>
+    <div id="results"></div>
+
+    <script>
+        const quiz = [
+            {
+                question: "Türkiye'nin başkenti neresidir?",
+                options: ["İstanbul", "Ankara", "İzmir", "Bursa"],
+                answer: 1
+            },
+            {
+                question: "2 + 2 kaç eder?",
+                options: ["3", "4", "5", "6"],
+                answer: 1
+            }
+        ];
+
+        let quizContainer = document.getElementById('quiz');
+        let resultsContainer = document.getElementById('results');
+        let submitButton = document.getElementById('submit');
+
+        function buildQuiz(){
+            quiz.forEach((question, index) => {
+                let questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                questionDiv.innerHTML = `<p>${index+1}. ${question.question}</p>`;
+                
+                question.options.forEach((option, i) => {
+                    questionDiv.innerHTML += `
+                    <label>
+                        <input type="radio" name="question${index}" value="${i}">
+                        ${option}
+                    </label><br>
+                    `;
+                });
+                
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function showResults(){
+            let answerContainers = quizContainer.querySelectorAll('.question');
+            let numCorrect = 0;
+            
+            quiz.forEach((question, index) => {
+                let selector = `input[name=question${index}]:checked`;
+                let userAnswer = (document.querySelector(selector) || {}).value;
+                
+                if(userAnswer == question.answer){
+                    numCorrect++;
+                    answerContainers[index].style.color = 'green';
+                } else {
+                    answerContainers[index].style.color = 'red';
+                }
+            });
+            
+            resultsContainer.innerHTML = `${numCorrect} sorudan ${quiz.length} doğru cevap`;
+        }
+
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+    </script>
+</body>
+</html>
